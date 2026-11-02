@@ -9,6 +9,31 @@ RepoMap is a small, local-first prototype that scans Python source files with th
 - Python 3.10+
 - pip
 
+## Architecture
+
+```mermaid
+flowchart LR
+    User[User in browser] -->|Project folder path| UI[RepoMap web UI]
+    UI -->|POST /analyze| API[FastAPI app]
+    API --> Analyzer[AST analyzer]
+    Analyzer --> Files[Python source files]
+    Analyzer --> Graph[Modules, functions, calls, imports]
+    Graph -->|JSON response| API
+    API --> UI
+    UI --> Results[Overview and connection lists]
+```
+## Test workflow
+
+```mermaid
+flowchart LR
+    Push[Push or pull request] --> CI[GitHub Actions]
+    CI --> Install[Install requirements]
+    Install --> Tests[Run pytest]
+    Tests --> Result{Tests pass?}
+    Result -->|Yes| Green[Workflow succeeds]
+    Result -->|No| Red[Workflow reports failure]
+```
+
 ## Run locally
 
 From this directory, create and activate a virtual environment, install the dependencies, then start the API:
